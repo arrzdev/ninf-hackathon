@@ -4,6 +4,16 @@ from datetime import datetime, timedelta
 
 NOS_VALUE = 1.852
 
+#used to evaluate the risk index
+MAX_VALUES = {
+  "wave_height": 10,
+  "wave_period": 20,
+  "wind_speed": 100,
+  "water_depth": 20,
+  "water_temperature": 30,
+  "power": 20
+}
+
 def parse_coords(script_tag):
   script_tag = str(script_tag)
   sindex = script_tag.index("Dec2DMS(")
@@ -90,7 +100,28 @@ class Beach:
   def get_average(self, property, day_offset=0):
     states = self.get_states_by_day(day_offset)
     return sum([float(state[property]) for state in states])/len(states)
+  
+  def get_risk_index(self, day_offset=0):
+    states = self.get_states_by_day(day_offset)
+
+    average_wave_height = sum([float(state["wave_height"]) for state in states])/len(states)
+    average_wave_period = sum([float(state["wave_period"]) for state in states])/len(states)
+    average_wind_speed = sum([float(state["wind_speed"]) for state in states])/len(states)
+    average_water_depth = sum([float(state["water_depth"]) for state in states])/len(states)
+    average_water_temperature = sum([float(state["water_temperature"]) for state in states])/len(states)
+    average_power = sum([float(state["power"]) for state in states])/len(states)
+
+    risk_index = (0.3 * average_wave_height) + (0.3 * average_wave_period) + (0.25 * average_wind_speed) + (0.25 * average_water_depth) + (0.15 * average_water_temperature) + (0.1 * average_power)
+
+    max_risk_index = (0.3 * MAX_VALUES["wave_height"]) + (0.3 * MAX_VALUES["wave_period"]) + (0.25 * MAX_VALUES["wind_speed"]) + (0.25 * MAX_VALUES["water_depth"]) + (0.15 * MAX_VALUES["water_temperature"]) + (0.1 * MAX_VALUES["power"])
+
+    normalized_risk_index = (risk_index/max_risk_index) * 10
+    return normalized_risk_index
+
+    # Beach State Index = (0.3 x Wave Height) + (0.3 x Wave Period) + (0.25 x Wind Speed) + (0.25 x Water Depth) + (0.15 x Water Temperature) + (0.1 x Power)
+    # return sum([float(state["power"]) for state in states])/len(states)
 
 
-# caparica = Beach(14)
-# print(caparica.get_data()["states"][0])
+caparica = Beach(14)
+
+print(caparica.get_risk_index(0))
