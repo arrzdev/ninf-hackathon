@@ -117,11 +117,3 @@ class Beach:
 
     normalized_risk_index = (risk_index/max_risk_index) * 10
     return normalized_risk_index
-
-    # Beach State Index = (0.3 x Wave Height) + (0.3 x Wave Period) + (0.25 x Wind Speed) + (0.25 x Water Depth) + (0.15 x Water Temperature) + (0.1 x Power)
-    # return sum([float(state["power"]) for state in states])/len(states)
-
-
-caparica = Beach(14)
-
-print(caparica.get_risk_index(0))

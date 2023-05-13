@@ -1,38 +1,24 @@
 import cv2
 import pickle
 import numpy as np
-from time import sleep
-
 class ParkingLot:
-  def __init__(self, video_path, pos_path):
-    self.stream = cv2.VideoCapture(video_path)
+  def __init__(self, parking_lot):
+    self.id = parking_lot["_id"]
+    self.stream = cv2.VideoCapture(f"parking/sources/{parking_lot['source']}")
 
     #load parking slots
-    with open(pos_path, 'rb') as f:
+    with open(f"parking/blueprints/{parking_lot['blueprint']}", "rb") as f:
       self.parking_slots = pickle.load(f)
 
     #set the parking slot size
-    self.width, self.height = 107, 48
+    #TODO: different sizes for different parking lots
+    self.width, self.height = 106, 48
 
     #set the current parking status
     self.parking_lot_state = {
-      "free": len(self.parking_slots),
-      "occupied": 0
+      "occupied": parking_lot["occupied"],
+      "free": parking_lot["free"]
     }
-
-  def run(self):
-    while True:
-      img = self.process_frame()
-      print(self.get_parking_lot_state())
-      if img is None:
-        print("Video feedback ended")
-        break
-
-      cv2.imshow("Detection", img)
-      cv2.waitKey(10)
-
-    self.stream.release()
-    cv2.destroyAllWindows()
 
   def process_frame(self):
     #read the current frame this would ideally come from a stream feed
@@ -50,11 +36,16 @@ class ParkingLot:
     img_dilate = cv2.dilate(img_median, kernel, iterations=1)
     
     #check the empty parking spaces
-    self.__check_parking_slots__(img, img_dilate)
+    state = self.__check_parking_slots__(img, img_dilate)
+    updated = True if state != self.parking_lot_state else False
+    self.parking_lot_state = state
 
-    return img
+    return img, updated
+
+  def get_id(self):
+    return self.id
   
-  def get_parking_lot_state(self):
+  def get_state(self):
     return self.parking_lot_state
 
   def __is_empty_slot__(self, zeros_count):
@@ -82,11 +73,7 @@ class ParkingLot:
         mask = cv2.bitwise_and(mask, (0, 0, 255))
         img[y:y + self.height, x:x + self.width] = cv2.addWeighted(img[y:y + self.height, x:x + self.width], 1, mask, 0.5, 0)
     
-    #update the parking lot state
-    self.parking_lot_state["free"] = empty_slots
-    self.parking_lot_state["occupied"] = len(self.parking_slots) - empty_slots
-
-if __name__ == '__main__':
-  pl = ParkingLot('parking_video.mp4', 'park_slots')
-  pl.run()
-
+    return {
+      "free": empty_slots,
+      "occupied": len(self.parking_slots) - empty_slots
+    }
