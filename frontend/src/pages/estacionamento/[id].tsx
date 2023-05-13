@@ -43,6 +43,9 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
         />
       </div>
       <div className="mt-12">
+        <h2 className="text-center text-gray-500 font-semibold mb-4">
+          Hourly Capacity
+        </h2>
         <Graph
           data={data.hourly}
           maxCapacity={data.max_capacity}
@@ -50,10 +53,13 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
         />
       </div>
       <div className="mt-12">
+        <h2 className="text-center text-gray-500 font-semibold mb-4">
+          Last Snapshot
+        </h2>
         <img
-          className="w-full h-auto rounded-lg shadow-md"
+          className="w-full h-auto rounded-lg shadow-md mb-20"
           src={`data:image/jpeg;base64,${data.last_snapshot}`}
-          alt="Base64 Image"
+          alt="Last Snapshot"
         />
       </div>
     </div>
@@ -63,7 +69,6 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
 export const getStaticProps = async (context: any) => {
   //get slug from url
   const id = Number(context.params.id);
-  console.log(id)
 
   //fetch single post detail
   const res = await api.get<ParkingCardData>(`/locations/${id}`)
