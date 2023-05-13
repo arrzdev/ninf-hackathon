@@ -1,5 +1,6 @@
 from decouple import config
 from flask import Flask
+from flask_cors import CORS
 from flask import jsonify
 import cv2
 import base64
@@ -14,6 +15,7 @@ if not MONGO_HOST:
   raise ValueError("Missing MONGO_HOST environment variable")
 
 app = Flask(__name__)
+CORS(app)
 
 def check_parking(location_id):
   #get parking lot object
@@ -86,8 +88,19 @@ def one(location_id):
   if "error" in detector_data:
     return detector_data
   
+  #get logs
+  parking_logs = list(parking_logs_collection.find({
+    "location_id": int(location_id)
+  }, {
+    "_id": 0,
+    "location_id": 0
+  }))
+
+  
+
   #update current data
   location.update(detector_data)
+  location.update({"hourly": parking_logs})
 
   return jsonify(location)
 
@@ -107,8 +120,14 @@ def beach():
 if __name__ == "__main__":
   #get mongo stuff
   client = mongo.get_client(MONGO_HOST)
+  
+  ##
   locations_db = client.locations
+  parking_db = client.parking
+
+  ###
   beachs_collection = locations_db.beachs
+  parking_logs_collection = parking_db.logs
 
   #create a parking lot pool
   beach_parking_pool = {}

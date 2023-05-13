@@ -1,6 +1,7 @@
 import cv2
 import pickle
 import numpy as np
+import time
 #get current working directory
 
 class ParkingLot:
@@ -28,10 +29,15 @@ class ParkingLot:
     success, img = self.stream.read()
     # #save img
     # cv2.imwrite(f"blueprints/help_{self.parking_id}.jpg", img)
-
     if not success:
       self.stream.set(cv2.CAP_PROP_POS_FRAMES, 0)
-      return
+      success, img = self.stream.read()
+
+    #get number of frames
+    total_frames = self.stream.get(cv2.CAP_PROP_FRAME_COUNT)
+    irl_projection = int(round(time.time() * 5)) % total_frames
+
+    self.stream.set(cv2.CAP_PROP_POS_FRAMES, irl_projection)
     
     #post process whole frame
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
