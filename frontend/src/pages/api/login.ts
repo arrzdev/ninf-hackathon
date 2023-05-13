@@ -9,9 +9,9 @@ export default async function handler(req: any, res: any) {
         return;
     }
 
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
         throw new Error('Missing property');
     }
 
@@ -20,7 +20,7 @@ export default async function handler(req: any, res: any) {
         const usersCollection = db.collection('users');
 
         // Check if the username exists in the database
-        const existingUser = await usersCollection.findOne({ username });
+        const existingUser = await usersCollection.findOne({ email });
 
         if (existingUser) {
             // User exists, perform login logic
@@ -37,7 +37,7 @@ export default async function handler(req: any, res: any) {
 
             // User doesn't exist, create a new user
             const { insertedId } = await usersCollection.insertOne({
-                username,
+                email,
                 password: hashedPassword,
             });
 
