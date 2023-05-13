@@ -1,4 +1,6 @@
 import { connectToDatabase } from '@/services/db';
+import { Password } from '@/services/hash';
+import { JwtToken } from '@/services/jwt';
 
 export default async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
@@ -7,7 +9,11 @@ export default async function handler(req: any, res: any) {
         return;
     }
 
-    const { username } = req.body;
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        throw new Error('Missing property');
+    }
 
     try {
         const db = await connectToDatabase('users');
@@ -18,13 +24,27 @@ export default async function handler(req: any, res: any) {
 
         if (existingUser) {
             // User exists, perform login logic
-            console.log('Login successful');
-            res.status(200).json({ message: 'Login successful', username });
+            const match = Password.compare(existingUser.password, password);
+
+            if (!match) throw new Error('Invalid password');
+
+            // @ts-ignore
+            const token = JwtToken.sign({ id: insertedId });
+
+            res.status(200).json({ message: 'Login successfull', token });
         } else {
+            const hashedPassword = await Password.toHash(password);
+
             // User doesn't exist, create a new user
-            await usersCollection.insertOne({ username });
-            console.log('User created');
-            res.status(200).json({ message: 'User created', username });
+            const { insertedId } = await usersCollection.insertOne({
+                username,
+                password: hashedPassword,
+            });
+
+            // @ts-ignore
+            const token = JwtToken.sign({ id: insertedId });
+
+            res.status(200).json({ message: 'User created', token });
         }
     } catch (error) {
         console.error('An error occurred:', error);

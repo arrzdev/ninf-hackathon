@@ -1,7 +1,17 @@
 import { connectToDatabase } from '@/services/db';
+import { JwtToken } from '@/services/jwt';
 
 export default async function handler(req: any, res: any) {
+    if (!req.headers.authorization) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
     try {
+        const token = req.headers.authorization;
+
+        const { id } = JwtToken.verify(token);
+
         const db = await connectToDatabase('locations');
         const eventsCollection = db.collection('beachs');
         const data = await eventsCollection.find().toArray();
