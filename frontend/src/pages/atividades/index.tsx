@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { EventCard } from '@/components/EventCard';
 import { useRouter } from 'next/router';
 import { nextApi } from '@/services/api';
+import Link from 'next/link';
 
 interface IReqData {
     _id: string;
@@ -64,10 +65,15 @@ const Beach = () => {
                         date={cardData.date + ' ' + cardData.hour}
                         title={cardData.name}
                         location={locationMapper[cardData.location]}
-                        id={cardData._id}
                     />
                 ))}
             </div>
+            <button
+                onClick={() => router.push('/atividades/criar')}
+                className='cursor-pointer text-xl fixed right-8 bottom-24 bg-blue-500 hover:bg-blue-400 text-white px-6 py-4 rounded-full'
+            >
+                +
+            </button>
         </div>
     );
 };

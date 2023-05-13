@@ -7,7 +7,7 @@ interface IEventProps {
     title: string;
     location: string;
     capacity: number;
-    id: string;
+    id: number;
 }
 
 export const EventCard = ({
