@@ -1,4 +1,5 @@
 import { connectToDatabase } from '@/services/db';
+import { JwtToken } from '@/services/jwt';
 import { ObjectId } from 'mongodb';
 
 export default async function handler(req: any, res: any) {
@@ -10,7 +11,16 @@ export default async function handler(req: any, res: any) {
 
     const { id } = req.body;
 
+    if (!id) throw new Error('Missing property');
+
+    if (!req.headers.authorization) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
     try {
+        JwtToken.verify(req.headers.authorization);
+
         const db = await connectToDatabase('events');
         const eventsCollection = db.collection('events');
 

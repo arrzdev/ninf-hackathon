@@ -1,4 +1,5 @@
 import { connectToDatabase } from '@/services/db';
+import { JwtToken } from '@/services/jwt';
 
 export default async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
@@ -13,6 +14,13 @@ export default async function handler(req: any, res: any) {
         if (!name || !date || !location || !capacity)
             throw new Error('Missing property');
 
+        if (!req.headers.authorization) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+
+        const { id } = JwtToken.verify(req.headers.authorization);
+
         const db = await connectToDatabase('events');
         const eventsCollection = db.collection('events');
 
@@ -22,6 +30,7 @@ export default async function handler(req: any, res: any) {
             location,
             maximum_capacity: capacity,
             current_capacity: 0,
+            owner: id,
         });
 
         res.status(200).json({
