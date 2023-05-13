@@ -110,7 +110,7 @@ class Beach:
     average_water_depth = sum([float(state["water_depth"]) for state in states])/len(states)
     average_water_temperature = sum([float(state["water_temperature"]) for state in states])/len(states)
     average_power = sum([float(state["power"]) for state in states])/len(states)
-
+  
     risk_index = (0.3 * average_wave_height) + (0.3 * average_wave_period) + (0.25 * average_wind_speed) + (0.25 * average_water_depth) + (0.15 * average_water_temperature) + (0.1 * average_power)
 
     max_risk_index = (0.3 * MAX_VALUES["wave_height"]) + (0.3 * MAX_VALUES["wave_period"]) + (0.25 * MAX_VALUES["wind_speed"]) + (0.25 * MAX_VALUES["water_depth"]) + (0.15 * MAX_VALUES["water_temperature"]) + (0.1 * MAX_VALUES["power"])

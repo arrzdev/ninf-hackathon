@@ -4,27 +4,31 @@ import numpy as np
 #get current working directory
 
 class ParkingLot:
-  def __init__(self, parking_lot):
-    self.id = parking_lot["_id"]
-    self.stream = cv2.VideoCapture(f"scripts/parking/sources/{parking_lot['source']}")
+  def __init__(self, location):
+    self.location = location;
+    self.parking_id = location["location_id"]
+    self.stream = cv2.VideoCapture(f"sources/{self.parking_id}.mp4")
 
     #load parking slots
-    with open(f"scripts/parking/blueprints/{parking_lot['blueprint']}", "rb") as f:
+    with open(f"blueprints/{self.parking_id}", "rb") as f:
       self.parking_slots = pickle.load(f)
 
     #set the parking slot size
     #TODO: different sizes for different parking lots
-    self.width, self.height = 106, 48
+    self.width, self.height = self.location["parking_meta"]["width"], self.location["parking_meta"]["height"]
 
     #set the current parking status
     self.parking_lot_state = {
-      "occupied": parking_lot["occupied"],
-      "free": parking_lot["free"]
+      "current_capacity": len(self.parking_slots),
+      "max_capacity": len(self.parking_slots),
     }
 
   def process_frame(self):
     #read the current frame this would ideally come from a stream feed
     success, img = self.stream.read()
+    # #save img
+    # cv2.imwrite(f"blueprints/help_{self.parking_id}.jpg", img)
+
     if not success:
       self.stream.set(cv2.CAP_PROP_POS_FRAMES, 0)
       return
@@ -32,7 +36,7 @@ class ParkingLot:
     #post process whole frame
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img_blur = cv2.GaussianBlur(img_gray, (3, 3), 1)
-    img_threshold = cv2.adaptiveThreshold(img_blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 16)
+    img_threshold = cv2.adaptiveThreshold(img_blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 14)
     img_median = cv2.medianBlur(img_threshold, 5)
     kernel = np.ones((3, 3), np.uint8)
     img_dilate = cv2.dilate(img_median, kernel, iterations=1)
@@ -43,15 +47,12 @@ class ParkingLot:
     self.parking_lot_state = state
 
     return img, updated
-
-  def get_id(self):
-    return self.id
   
   def get_state(self):
     return self.parking_lot_state
 
   def __is_empty_slot__(self, zeros_count):
-    return zeros_count < 900
+    return zeros_count < self.location["parking_meta"]["threshold"]
 
   def __check_parking_slots__(self, img, img_dilate):
     empty_slots = 0
@@ -76,6 +77,6 @@ class ParkingLot:
         img[y:y + self.height, x:x + self.width] = cv2.addWeighted(img[y:y + self.height, x:x + self.width], 1, mask, 0.5, 0)
     
     return {
-      "free": empty_slots,
-      "occupied": len(self.parking_slots) - empty_slots
+      "current_capacity": empty_slots,
+      "max_capacity": len(self.parking_slots),
     }

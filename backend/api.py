@@ -1,7 +1,6 @@
 from decouple import config
 from flask import Flask
 from flask import jsonify
-import json
 import cv2
 import base64
 
@@ -16,47 +15,87 @@ if not MONGO_HOST:
 
 app = Flask(__name__)
 
-@app.route("/parking/<name>")
-def parking(name):
-  park = parking_collection.find_one({
-    "name": name
-  })
+def check_parking(location_id):
+  #get parking lot object
+  parking_lot = beach_parking_pool.get(location_id, None)
+  if parking_lot == None:
+    return {
+      "error": "No parking lot with that id"
+    }
   
-  if not park:
-    return {"error": "Parking lot not found"}, 404
-  
-  #get the park from the pool
-  park = parking_lots_pool[park["_id"]]
-  res = park.process_frame()
-
+  #process
+  res = parking_lot.process_frame()
   if not res:
-    return {"error": "Parking lot feed failed"}, 500
+    return {
+      "error": "Stream feed failed"
+    }
   
   frame, updated = res
 
-  #save frame
-  cv2.imwrite(f"frames/{park.get_id()}.jpg", frame)
-
-  #convert cv2 Image frame to base64
+   #convert cv2 Image frame to base64
   _, buffer = cv2.imencode('.jpg', frame)
   b64_frame = base64.b64encode(buffer).decode('utf-8')
 
-  current_state = park.get_state()
-  
-  #add b64 frame
-  current_state.update({
-    "last_frame": b64_frame
-  })
+  new_parking_data = parking_lot.get_state()
 
-  if updated:
-    print("UPDATED DB!")
-    parking_collection.update_one(
-      {"_id": park.get_id()},{
-          "$set": current_state
+  if updated: #update document 
+    new_parking_data.update({
+      "last_snapshot": b64_frame
+    })
+    beachs_collection.update_one({"location_id":
+     location_id},{
+          "$set": new_parking_data
         }
     )
 
-  return jsonify(current_state)
+  return new_parking_data
+
+@app.route("/locations")
+def all():
+  locations = beachs_collection.find({}, {
+    "parking_meta": 0,
+    "_id": 0
+  })
+
+  try:
+    updated_locations = []
+    for location in locations:
+      location.update(check_parking(location["location_id"]))
+      location.pop("last_snapshot", None) #remove snapshot from response
+      updated_locations.append(location)
+  except:
+    return {"error": "Server error"}, 500
+  
+  return jsonify(updated_locations)
+  
+
+@app.route("/locations/<location_id>")
+def one(location_id):
+  location = beachs_collection.find_one({
+    "location_id": int(location_id)
+  }, {
+    "parking_meta": 0,
+       "_id": 0
+  })
+
+  if not location:
+    return {"error": "Location not found"}
+
+  detector_data = check_parking(location["location_id"])
+
+  if "error" in detector_data:
+    return detector_data
+  
+  #update current data
+  location.update(detector_data)
+
+  return jsonify(location)
+
+  
+
+
+  #update parking data
+
 
 @app.route("/beach")
 def beach():
@@ -67,19 +106,20 @@ def beach():
 
 if __name__ == "__main__":
   #get mongo stuff
-  db = mongo.get_client(MONGO_HOST)
-  parking_collection = db.parking.parking_lots
+  client = mongo.get_client(MONGO_HOST)
+  locations_db = client.locations
+  beachs_collection = locations_db.beachs
 
   #create a parking lot pool
-  parking_lots_pool = {}
+  beach_parking_pool = {}
 
   #get all parking lots
-  parking_lots = parking_collection.find()
+  beach_locations = beachs_collection.find()
 
   #add all parking lots to the pool
-  for parking_lot in parking_lots:
-    parking_lots_pool.update({
-      parking_lot["_id"]: ParkingLot(parking_lot)
+  for beach_location in beach_locations:
+    beach_parking_pool.update({
+      beach_location["location_id"]: ParkingLot(beach_location)
     })
 
   #init api
