@@ -1,13 +1,15 @@
 import cv2
 import pickle
 import numpy as np
+#get current working directory
+
 class ParkingLot:
   def __init__(self, parking_lot):
     self.id = parking_lot["_id"]
-    self.stream = cv2.VideoCapture(f"parking/sources/{parking_lot['source']}")
+    self.stream = cv2.VideoCapture(f"scripts/parking/sources/{parking_lot['source']}")
 
     #load parking slots
-    with open(f"parking/blueprints/{parking_lot['blueprint']}", "rb") as f:
+    with open(f"scripts/parking/blueprints/{parking_lot['blueprint']}", "rb") as f:
       self.parking_slots = pickle.load(f)
 
     #set the parking slot size
