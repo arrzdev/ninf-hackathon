@@ -8,10 +8,10 @@ export default async function handler(req: any, res: any) {
         return;
     }
 
-    const { name, date, location, capacity } = req.body;
+    const { name, date, location, capacity, hour } = req.body;
 
     try {
-        if (!name || !date || !location || !capacity)
+        if (!name || !date || !location || !capacity || !hour)
             throw new Error('Missing property');
 
         if (!req.headers.authorization) {
@@ -31,6 +31,7 @@ export default async function handler(req: any, res: any) {
             maximum_capacity: capacity,
             current_capacity: 0,
             owner: id,
+            hour,
         });
 
         res.status(200).json({

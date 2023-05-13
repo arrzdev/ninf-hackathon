@@ -11,6 +11,7 @@ interface IReqData {
     location: string;
     current_capacity: number;
     maximum_capacity: number;
+    hour: string;
 }
 
 const Beach = () => {
@@ -60,7 +61,7 @@ const Beach = () => {
                             cardData.maximum_capacity -
                             cardData.current_capacity
                         }
-                        date={cardData.date}
+                        date={cardData.date + ' ' + cardData.hour}
                         title={cardData.name}
                         location={locationMapper[cardData.location]}
                         id={cardData._id}
