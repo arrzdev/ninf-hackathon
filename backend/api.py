@@ -18,13 +18,12 @@ app = Flask(__name__)
 CORS(app)
 
 def check_parking(location_id):
-  #get parking lot object
-  parking_lot = beach_parking_pool.get(location_id, None)
+  parking_lot = beach_parking_pool.get(int(location_id), None)
   if parking_lot == None:
     return {
       "error": "No parking lot with that id"
     }
-  
+
   #process
   res = parking_lot.process_frame()
   if not res:
@@ -83,31 +82,27 @@ def one(location_id):
   if not location:
     return {"error": "Location not found"}
 
-  detector_data = check_parking(location["location_id"])
+  detector_data = check_parking(location_id)
 
   if "error" in detector_data:
     return detector_data
   
+  #get the park_lot object
+  obj = beach_parking_pool.get(int(location_id), None)
+  
   #get logs
   parking_logs = list(parking_logs_collection.find({
-    "location_id": int(location_id)
+    "location_id": int(obj.get_id())
   }, {
     "_id": 0,
     "location_id": 0
   }))
-
-  
 
   #update current data
   location.update(detector_data)
   location.update({"hourly": parking_logs})
 
   return jsonify(location)
-
-  
-
-
-  #update parking data
 
 
 @app.route("/beach")
@@ -137,8 +132,38 @@ if __name__ == "__main__":
 
   #add all parking lots to the pool
   for beach_location in beach_locations:
+     
+    """
+    the following code is for time-cute purposes, so that I can spawn multiple locations in the db with different id's I will point all the id's to either 14, 15 or 16 to use the same data
+    """
+    static_meta = [
+    {
+      "width": 106,
+      "height": 48,
+      "threshold": 950
+    },  
+    {
+      "width": 15,
+      "height": 40,
+      "threshold": 6
+    },
+    {
+      "width": 15,
+      "height": 40,
+      "threshold": 3,
+    }]
+
+    beach_id = beach_location["location_id"]
+    if beach_id not in [14, 15, 16]:
+      i = beach_id % 3
+      beach_location["location_id"] = [14, 15, 16][i]
+      beach_location["parking_meta"] = static_meta[i]
+
+    """"
+    end of time-cute
+    """
     beach_parking_pool.update({
-      beach_location["location_id"]: ParkingLot(beach_location)
+      beach_id: ParkingLot(beach_location)
     })
 
   #init api

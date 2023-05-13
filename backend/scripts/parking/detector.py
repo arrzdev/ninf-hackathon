@@ -6,7 +6,7 @@ import time
 
 class ParkingLot:
   def __init__(self, location):
-    self.location = location;
+    self.location = location
     self.parking_id = location["location_id"]
     self.stream = cv2.VideoCapture(f"sources/{self.parking_id}.mp4")
 
@@ -23,6 +23,9 @@ class ParkingLot:
       "current_capacity": len(self.parking_slots),
       "max_capacity": len(self.parking_slots),
     }
+
+  def get_id(self):
+    return self.parking_id
 
   def process_frame(self):
     #read the current frame this would ideally come from a stream feed

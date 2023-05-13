@@ -38,7 +38,7 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
       </div>
       <div className="mt-8">
         <Progress
-          currentCapacity={data.current_capacity}
+          currentCapacity={data.max_capacity - data.current_capacity}
           maxCapacity={data.max_capacity}
         />
       </div>
@@ -49,7 +49,7 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
         <Graph
           data={data.hourly}
           maxCapacity={data.max_capacity}
-          currentCapacity={data.current_capacity}
+          currentCapacity={data.max_capacity - data.current_capacity}
         />
       </div>
       <div className="mt-12">

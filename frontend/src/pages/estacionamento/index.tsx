@@ -50,7 +50,7 @@ const Parking: NextPage<IProps> = ({ data }) => {
             <ParkingCard
               key={index}
               name={cardData.name}
-              currentCapacity={cardData.current_capacity}
+              currentCapacity={cardData.max_capacity - cardData.current_capacity}
               maxCapacity={cardData.max_capacity}
               location={cardData.address}
               id={cardData.location_id}
