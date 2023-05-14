@@ -61,11 +61,7 @@ const CreateEvent = () => {
         debounce(
             async (form: any) => {
                 //check if all fields are filled
-                if (
-                    !form.date ||
-                    !form.location ||
-                    !form.hour
-                ) {
+                if (!form.date || !form.location || !form.hour) {
                     return;
                 }
 
@@ -118,6 +114,7 @@ const CreateEvent = () => {
                     location: form.location,
                     capacity: form.capacity,
                     hour: form.hour,
+                    predictedCapacity,
                 },
                 {
                     headers: {

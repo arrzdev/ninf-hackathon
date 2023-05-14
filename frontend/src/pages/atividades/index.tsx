@@ -6,7 +6,6 @@ import { nextApi } from '@/services/api';
 
 import { Navbar } from '@/components/Navbar';
 
-
 interface IReqData {
     _id: string;
     name: string;
@@ -14,6 +13,7 @@ interface IReqData {
     location: string;
     current_capacity: number;
     maximum_capacity: number;
+    predicted_capacity: number;
     hour: string;
 }
 
@@ -55,31 +55,31 @@ const Beach = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(event.target.value);
+        setSearchTerm(event.target.value);
     };
 
     useEffect(() => {
-      setFilteredData(
-        activities.filter((activity) =>
-          activity.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
+        setFilteredData(
+            activities.filter(activity =>
+                activity.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
     }, [searchTerm, activities]);
 
     return (
         <div className='container mx-auto px-4 py-8'>
-          <Navbar/>
+            <Navbar />
             <h1 className='text-3xl font-bold mb-4'>Atividades</h1>
             <div className='flex mb-4'>
-              <input
-                type='text'
-                placeholder='Search by name'
-                className='rounded-lg px-4 py-2 bg-gray-200 text-gray-800 w-full'
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
+                <input
+                    type='text'
+                    placeholder='Search by name'
+                    className='rounded-lg px-4 py-2 bg-gray-200 text-gray-800 w-full'
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
             </div>
-        <div className='grid grid-cols-1 gap-4 mb-16'>
+            <div className='grid grid-cols-1 gap-4 mb-16'>
                 {filteredData?.map((cardData, index) => (
                     // @ts-ignore
                     <EventCard
@@ -91,6 +91,7 @@ const Beach = () => {
                         date={cardData.date + ' ' + cardData.hour}
                         title={cardData.name}
                         location={locationMapper[cardData.location]}
+                        id={cardData._id}
                     />
                 ))}
             </div>

@@ -8,7 +8,8 @@ export default async function handler(req: any, res: any) {
         return;
     }
 
-    const { name, date, location, capacity, hour } = req.body;
+    const { name, date, location, capacity, hour, predictedCapacity } =
+        req.body;
 
     try {
         if (!name || !date || !location || !capacity || !hour)
@@ -32,6 +33,7 @@ export default async function handler(req: any, res: any) {
             current_capacity: 0,
             owner: id,
             hour,
+            predicted_capacity: predictedCapacity,
         });
 
         res.status(200).json({
