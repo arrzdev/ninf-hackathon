@@ -66,7 +66,7 @@ const Beach = () => {
               activity.name.toLowerCase().includes(searchTerm.toLowerCase()) || locationMapper[activity.location].toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
-    }, [searchTerm, activities]);
+    }, [searchTerm, activities, locationMapper]);
 
     return (
         <div className='container mx-auto px-4 py-8'>
