@@ -1,8 +1,8 @@
 {
   "name": "CaparicaGO",
   "short_name": "CaparicaGO",
-  "theme_color": "#FFFFFF",
-  "background_color": "#FFFFFF",
+  "theme_color": "#eff6ff",
+  "background_color": "#eff6ff",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
