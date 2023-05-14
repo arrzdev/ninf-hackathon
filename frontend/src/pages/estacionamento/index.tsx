@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ParkingCard } from '@/components/ParkingCard';
 import { api } from '@/services/api';
-import { CastRounded } from '@mui/icons-material';
 import { NextPage } from 'next';
+import { Navbar } from '@/components/Navbar';
 
 interface ParkingCardData {
   name: string;
@@ -34,6 +34,7 @@ const Parking: NextPage<IProps> = ({ data }) => {
 
   return (
     <div className='container mx-auto px-4 py-8'>
+      <Navbar />
       <h1 className='text-3xl font-bold mb-4 text-start'>Estacionamento</h1>
       <div className='flex mb-4'>
         <input

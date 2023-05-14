@@ -4,6 +4,9 @@ import { EventCard } from '@/components/EventCard';
 import { useRouter } from 'next/router';
 import { nextApi } from '@/services/api';
 
+import { Navbar } from '@/components/Navbar';
+
+
 interface IReqData {
     _id: string;
     name: string;
@@ -65,6 +68,7 @@ const Beach = () => {
 
     return (
         <div className='container mx-auto px-4 py-8'>
+          <Navbar/>
             <h1 className='text-3xl font-bold mb-4'>Atividades</h1>
             <div className='flex mb-4'>
               <input

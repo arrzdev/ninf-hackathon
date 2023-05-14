@@ -3,6 +3,7 @@ import { api } from '@/services/api';
 import { NextPage } from 'next';
 
 import { useRouter } from 'next/router';
+import { Navbar } from '@/components/Navbar';
 
 const Home: NextPage<any> = ({ data }) => {
     const router = useRouter();
@@ -14,7 +15,10 @@ const Home: NextPage<any> = ({ data }) => {
         }
     }, [router]);
 
-    return <div>Hello World</div>;
+    return <>
+      <Navbar/>
+      <div>Hello World</div>;
+    </>
 };
 
 export default Home;

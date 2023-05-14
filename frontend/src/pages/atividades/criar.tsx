@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { nextApi } from '@/services/api';
 import { GoBack } from '@/components/GoBack';
+import { Navbar } from '@/components/Navbar';
+
 
 const CreateEvent = () => {
     const router = useRouter();
@@ -127,6 +129,7 @@ const CreateEvent = () => {
 
   return (
     <>
+      <Navbar />
       <GoBack title='Create Event' />
       <form
         onSubmit={handleSubmit}
@@ -170,11 +173,15 @@ const CreateEvent = () => {
             className='mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2'
           >
             <option value=''>Select location</option>
-            {Object.entries(locationMapper).map(([id, name]) => (
-              <option key={id} value={id}>
-                {name}
-              </option>
-            ))}
+            {Object.entries(locationMapper).map(key => {
+              const id = key[0];
+              const name = key[1] as string;
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
           </select>
         </div>
         <div>

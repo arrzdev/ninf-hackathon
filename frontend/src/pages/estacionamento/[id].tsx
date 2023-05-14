@@ -7,6 +7,8 @@ import { GoBack } from '@/components/GoBack';
 
 import { api } from '@/services/api';
 import { NextPage } from 'next';
+import { Navbar } from '@/components/Navbar';
+
 
 interface ParkingCardData {
   name: string;
@@ -29,6 +31,7 @@ interface IProps {
 const ParkingId: NextPage<IProps> = ({ data }) => {
   return (
     <div className="p-4 bg-blue-50">
+      <Navbar/>
       <GoBack title={data.name} />
       <div className="mt-8">
         <p className="text-center text-gray-500 flex items-center justify-center">
