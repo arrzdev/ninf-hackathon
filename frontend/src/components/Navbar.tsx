@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 import Link from 'next/link';
 
-import { BeachAccess, Home, Directions } from '@mui/icons-material';
+import { BeachAccess, Newspaper, Directions } from '@mui/icons-material';
 
 export const Navbar = () => {
     return (
@@ -14,7 +14,7 @@ export const Navbar = () => {
             </Head>
             <div className='grid h-full max-w-lg grid-cols-3 mx-auto font-medium'>
                 <Link
-                    href='/'
+                    href='/noticias'
                     type='button'
                     className='inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group'
                 >
@@ -22,10 +22,10 @@ export const Navbar = () => {
                         className='w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500'
                         fill='currentColor'
                     >
-                        <Home />
+                        <Newspaper />
                     </svg>
                     <span className='text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500'>
-                        Home
+                        Noticias
                     </span>
                 </Link>
                 <Link

@@ -58,8 +58,6 @@ const Beach = () => {
         setSearchTerm(event.target.value);
     };
 
-    console.log(activities[0].location)
-
     useEffect(() => {
         setFilteredData(
             activities.filter(activity =>
@@ -75,7 +73,7 @@ const Beach = () => {
             <div className='flex mb-4'>
                 <input
                     type='text'
-                    placeholder='Search by name'
+                    placeholder='Pesquisa por nome ou localização'
                     className='rounded-lg px-4 py-2 bg-gray-200 text-gray-800 w-full'
                     value={searchTerm}
                     onChange={handleSearchChange}

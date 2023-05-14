@@ -30,8 +30,9 @@ interface IProps {
 
 const ParkingId: NextPage<IProps> = ({ data }) => {
   return (
-    <div className="p-4 bg-blue-50">
+    <>
       <Navbar/>
+      <div className='pt-2 px-4'>
       <GoBack title={data.name} />
       <div className="mt-8">
         <p className="text-center text-gray-500 flex items-center justify-center">
@@ -47,7 +48,7 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
       </div>
       <div className="mt-12">
         <h2 className="text-center text-gray-500 font-semibold mb-4">
-          Hourly Capacity
+          Histórico das ultimas 24 horas
         </h2>
         <Graph
           data={data.hourly}
@@ -57,7 +58,7 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
       </div>
       <div className="mt-12">
         <h2 className="text-center text-gray-500 font-semibold mb-4">
-          Last Snapshot
+          Estado atual do estacionamento
         </h2>
         <img
           className="w-full h-auto rounded-lg shadow-md mb-20"
@@ -65,7 +66,8 @@ const ParkingId: NextPage<IProps> = ({ data }) => {
           alt="Last Snapshot"
         />
       </div>
-    </div>
+      </div>
+      </>
   );
 };
 

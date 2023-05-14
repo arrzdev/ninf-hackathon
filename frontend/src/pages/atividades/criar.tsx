@@ -131,14 +131,14 @@ const CreateEvent = () => {
     return (
         <div className='flex flex-col h-screen'>
             <Navbar />
-            <GoBack title='Create Event' />
+            <GoBack title='Criar Atividade' />
             <form
                 onSubmit={handleSubmit}
                 className='flex-grow max-w-lg mx-auto mt-10 px-4 py-6 space-y-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:max-w-xl overflow-y-hidden'
             >
                 <div>
                     <label htmlFor='name' className='block text-gray-800'>
-                        Name
+                      Nome
                     </label>
                     <input
                         type='text'
@@ -151,7 +151,7 @@ const CreateEvent = () => {
                 </div>
                 <div>
                     <label htmlFor='date' className='block text-gray-800'>
-                        Date
+                        Data
                     </label>
                     <input
                         type='date'
@@ -164,7 +164,7 @@ const CreateEvent = () => {
                 </div>
                 <div>
                     <label htmlFor='location' className='block text-gray-800'>
-                        Location
+                        Localização
                     </label>
                     <select
                         id='location'
@@ -173,7 +173,7 @@ const CreateEvent = () => {
                         onChange={handleChange}
                         className='mt-1 block w-full bg-white border-gray-300 rounded-md shadow-sm p-2'
                     >
-                        <option value=''>Select location</option>
+                        <option value=''>Selecionar localização</option>
                         {Object.entries(locationMapper).map(key => {
                             const id = key[0];
                             const name = key[1] as string;
@@ -187,7 +187,7 @@ const CreateEvent = () => {
                 </div>
                 <div>
                     <label htmlFor='capacity' className='block text-gray-800'>
-                        Capacity
+                        Vagas
                     </label>
                     <input
                         type='number'
@@ -200,7 +200,7 @@ const CreateEvent = () => {
                 </div>
                 <div>
                     <label htmlFor='hour' className='block text-gray-800'>
-                        Hour
+                        Hora
                     </label>
                     <input
                         type='time'
@@ -213,14 +213,14 @@ const CreateEvent = () => {
                 </div>
                 {predictedCapacity !== -1 && (
                     <div className='text-black text-center mt-4'>
-                        Predicted parking availability: {predictedCapacity}
+                        Estacionamento previsto: {predictedCapacity} lugares
                     </div>
                 )}
                 <button
                     type='submit'
                     className='w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700'
                 >
-                    Submit
+                    Criar
                 </button>
             </form>
         </div>

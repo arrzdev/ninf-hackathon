@@ -85,7 +85,7 @@ export const EventCard = ({
             <h2 className='text-xl font-bold mb-2 text-blue-800'>
               {title}
             </h2>
-            <p className='text-gray-500 text-sm mb-2'>Predicted <span className='font-bold'>{predicted_capacity}</span> parking slots</p>
+            <p className='text-gray-500 text-sm mb-2'>Estacionamento previsto: <span className='font-bold'>{predicted_capacity}</span> lugares</p>
             <p className='text-gray-500 text-sm mb-2'>{date}</p>
             {location ? (
               <div className='flex items-center text-gray-600'>

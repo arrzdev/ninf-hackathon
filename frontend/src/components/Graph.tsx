@@ -65,7 +65,7 @@ export const Graph = (props: IGraphProps) => {
         labels: labels,
         datasets: [
             {
-                label: 'Capacity',
+                label: 'Capacidade',
                 data: capacities,
                 fill: false,
                 backgroundColor: c,

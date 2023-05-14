@@ -1,0 +1,9 @@
+{
+  "name": "CaparicaGO",
+  "short_name": "CaparicaGO",
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
