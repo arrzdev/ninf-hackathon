@@ -24,13 +24,12 @@ export default async function handler(req: any, res: any) {
 
         if (existingUser) {
             // User exists, perform login logic
-            const match = Password.compare(existingUser.password, password);
+            const match = await Password.compare(existingUser.password, password);
 
-            if (!match) throw new Error('Invalid password');
+            if (!match) res.status(401).json({ error: 'Invalid password' })
 
             // @ts-ignore
-            const token = JwtToken.sign({ id: insertedId });
-
+            const token = JwtToken.sign({ id: existingUser._id });
             res.status(200).json({ message: 'Login successfull', token });
         } else {
             const hashedPassword = await Password.toHash(password);

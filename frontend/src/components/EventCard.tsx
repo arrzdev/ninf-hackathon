@@ -1,6 +1,5 @@
 import React from 'react';
 import { LocationOn } from '@mui/icons-material';
-import { useRouter } from 'next/router';
 
 interface IEventProps {
     date: string;
@@ -17,12 +16,6 @@ export const EventCard = ({
     capacity,
     id,
 }: IEventProps) => {
-    const router = useRouter();
-
-    const linker = () => {
-        router.push(`/atividades/${id}`);
-    };
-
     return (
         <div className='bg-blue-100 rounded-lg shadow-md p-6 mb-4 flex'>
             <div className='w-3/4 pr-4'>
@@ -30,10 +23,16 @@ export const EventCard = ({
                     {title}
                 </h2>
                 <p className='text-gray-500 text-sm mb-2'>{date}</p>
+                {location ? (
                 <div className='flex items-center text-gray-600'>
                     <LocationOn className='inline-block text-blue-800 mr-2 animate-pulse' />
                     <p>{location}</p>
                 </div>
+                ):(
+                  <div className='animate-pulse'>
+                    <div className='h-5 bg-gray-300 rounded w-1/2 mb-2'></div>
+                  </div>
+                )}
             </div>
             <div className='w-1/4 flex justify-end'>
                 <p className='text-gray-600'>{capacity} Vagas</p>

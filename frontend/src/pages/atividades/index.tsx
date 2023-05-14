@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { EventCard } from '@/components/EventCard';
 import { useRouter } from 'next/router';
 import { nextApi } from '@/services/api';
-import Link from 'next/link';
 
 interface IReqData {
     _id: string;
@@ -17,7 +16,6 @@ interface IReqData {
 
 const Beach = () => {
     const router = useRouter();
-
     const [activities, setActivities] = useState<IReqData[]>([]);
 
     const [locationMapper, setLocationMapper] = useState<any>({});
@@ -50,11 +48,35 @@ const Beach = () => {
             });
     }, [router]);
 
+    const [filteredData, setFilteredData] = useState(activities);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value);
+    };
+
+    useEffect(() => {
+      setFilteredData(
+        activities.filter((activity) =>
+          activity.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }, [searchTerm, activities]);
+
     return (
         <div className='container mx-auto px-4 py-8'>
             <h1 className='text-3xl font-bold mb-4'>Atividades</h1>
+            <div className='flex mb-4'>
+              <input
+                type='text'
+                placeholder='Search by name'
+                className='rounded-lg px-4 py-2 bg-gray-200 text-gray-800 w-full'
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </div>
             <div className='grid grid-cols-1 gap-4'>
-                {activities?.map((cardData, index) => (
+                {filteredData?.map((cardData, index) => (
                     // @ts-ignore
                     <EventCard
                         key={index}

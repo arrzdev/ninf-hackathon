@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 const Login: NextPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState("");
 
     const router = useRouter();
 
@@ -32,7 +33,7 @@ const Login: NextPage = () => {
                 router.push('/');
             })
             .catch(error => {
-                console.log(error);
+                setError(error.response.data.error);
             });
     };
 
@@ -83,9 +84,14 @@ const Login: NextPage = () => {
                     >
                         Login
                     </button>
+                    {error && (
+                        <div className='text-red-500 text-center mt-4'>
+                            {error}
+                        </div>  
+                    )}
                 </form>
                 <p className='text-gray-600 text-center mt-4'>
-                    Dont have an account?
+            Dont have an account?&nbsp;
                     <a href='#' className='underline'>
                         Sign up here
                     </a>
