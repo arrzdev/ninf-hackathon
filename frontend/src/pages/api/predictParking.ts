@@ -8,10 +8,10 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const { date, location, capacity, hour } = req.body;
+  const { date, location, hour } = req.body;
 
   try {
-    if (!date || !location || !capacity || !hour)
+    if (!date || !location || !hour)
       throw new Error('Missing property');
 
     if (!req.headers.authorization) {
@@ -38,9 +38,6 @@ export default async function handler(req: any, res: any) {
 
       //get predicted value for location in hour chosen
       var predicted = hourly[targetHour-1]["capacity"]
-
-      //subtract capacity
-      predicted = Number(predicted) - Number(capacity)
 
       //if predicted < 0, set to 0
       if (predicted < 0) predicted = 0

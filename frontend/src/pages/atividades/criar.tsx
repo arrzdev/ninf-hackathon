@@ -64,7 +64,6 @@ const CreateEvent = () => {
                 if (
                     !form.date ||
                     !form.location ||
-                    !form.capacity ||
                     !form.hour
                 ) {
                     return;
@@ -76,7 +75,6 @@ const CreateEvent = () => {
                         {
                             date: form.date,
                             location: form.location,
-                            capacity: form.capacity,
                             hour: form.hour,
                         },
                         {
@@ -141,7 +139,7 @@ const CreateEvent = () => {
             <GoBack title='Create Event' />
             <form
                 onSubmit={handleSubmit}
-                className='flex-grow max-w-lg mx-auto mt-10 px-4 py-6 shadow-md rounded-md space-y-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:max-w-xl overflow-y-hidden'
+                className='flex-grow max-w-lg mx-auto mt-10 px-4 py-6 space-y-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:max-w-xl overflow-y-hidden'
             >
                 <div>
                     <label htmlFor='name' className='block text-gray-800'>
