@@ -58,10 +58,12 @@ const Beach = () => {
         setSearchTerm(event.target.value);
     };
 
+    console.log(activities[0].location)
+
     useEffect(() => {
         setFilteredData(
             activities.filter(activity =>
-                activity.name.toLowerCase().includes(searchTerm.toLowerCase())
+              activity.name.toLowerCase().includes(searchTerm.toLowerCase()) || locationMapper[activity.location].toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
     }, [searchTerm, activities]);
