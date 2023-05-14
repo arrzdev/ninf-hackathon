@@ -33,7 +33,8 @@ const Login: NextPage = () => {
                 router.push('/');
             })
             .catch(error => {
-                setError(error.response.data.error);
+                // setError(error.response.data.error);
+                setError(error.message);
             });
     };
 
