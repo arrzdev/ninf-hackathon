@@ -5,6 +5,7 @@ from flask import jsonify
 import cv2
 import base64
 
+from scripts.news.crawler import get_feed
 from scripts.parking.detector import ParkingLot
 from scripts.beach.crawler import Beach
 
@@ -110,7 +111,9 @@ def beach():
   beach = Beach(14)
   return jsonify(beach.get_data())
 
-  
+@app.route("/feed")
+def feed():
+  return jsonify(get_feed())
 
 if __name__ == "__main__":
   #get mongo stuff
