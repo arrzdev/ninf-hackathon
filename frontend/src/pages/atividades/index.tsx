@@ -91,6 +91,7 @@ const Beach = () => {
                         date={cardData.date + ' ' + cardData.hour}
                         title={cardData.name}
                         location={locationMapper[cardData.location]}
+                        predicted_capacity={cardData.predicted_capacity}
                         id={cardData._id}
                     />
                 ))}

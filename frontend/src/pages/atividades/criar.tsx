@@ -103,8 +103,6 @@ const CreateEvent = () => {
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
-        console.log(form);
-
         nextApi
             .post(
                 '/createEvent',
