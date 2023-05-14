@@ -38,7 +38,7 @@ export const ParkingCard = ({
         >
             <div className='flex justify-between'>
                 <div className='text-left'>
-                    <h2 className='text-xl font-bold mb-2'>{name}</h2>
+                    <h2 className='text-xl font-bold mb-2 pr-4'>{name}</h2>
                     <p className='text-gray-500'>
                         <LocationOn className='inline-block mr-1' />
                         <span>{location}</span>

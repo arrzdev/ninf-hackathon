@@ -33,7 +33,7 @@ const Home: NextPage<IProps> = ({ news }) => {
     <Navbar />
     <h1 className='text-3xl font-bold mb-12 text-start'>Noticias da Caparica</h1>
       <Navbar/>
-        <ul>
+        <ul className='mb-16'>
           {news.map((item: Article) => (
             <li key={item.link} className="mb-6">
               <Link target="_blank" href={item.link} className='flex items-center'>
